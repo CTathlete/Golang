@@ -12,5 +12,9 @@ import(
 func main() {
 	const maxChairs = 3
 
-	// shop := Openshop
+	shop := ShopIsOpened(maxChairs)
+	defer shop.close()
+// Close the shop in 50 milliseconds.
+	t = time.NewTimer(50 * time.Millisecond)
+	<-t.c
 }
