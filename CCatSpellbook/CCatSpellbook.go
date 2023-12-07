@@ -11,7 +11,7 @@ func CheckErr(err error) {
 	}
 }
 
-func copy(src string, dst string) {
+func CopyFile(src string, dst string) {
 	// Reads src and writes it to dst.
 	data, err := os.ReadFile(src)
 	CheckErr(err)
