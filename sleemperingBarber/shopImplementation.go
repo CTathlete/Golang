@@ -1,5 +1,14 @@
 package main
 
+import(
+	"fmt"
+	"sync/atomic"
+	"errors"
+	"sync"
+	"math/rand"
+	"time"
+)
+
 var (
 	ErrShopClosed = errors.New("Shop is closed")
 	// ErrShopClosed is returned when the shop is closed.
@@ -8,14 +17,14 @@ var (
 	// ErrNoChair is returned when there are no chairs available.
 )
 
-type costumer struct {
+type customer struct {
 	name string
 } // costumer represents a customer to be serviced.
 
 type Shop struct {
 	open int32 // Determines whether the shop is open.
 	chairs chan customer // A global queue of customers.
-	synchroniser sync.waitGroup 
+	synchroniser sync.WaitGroup 
 	// A waitgroup to wait for all the chairs to get empty.
 }
 
@@ -23,9 +32,9 @@ func ShopIsOpened(maxChairs int) *Shop {
 	fmt.Println("Opening the shop")
 
 	s := Shop{
-		chairs: make(chan customer, maxChairs)
+		chairs: make(chan customer, maxChairs),
 	}
-	atomic.(&s.open).StoreInt32(1)
+	atomic.StoreInt32(&s.open, 1)
 
 // The following block represents the barber's work.
 // the sync will report that the work is done after 
@@ -49,10 +58,10 @@ func ShopIsOpened(maxChairs int) *Shop {
 		var id int64
 
 		for {
-			time.Sleep(time.Duration(rand.Intn(75))*time.Millisecond)
+			time.Sleep(time.Duration(rand.Intn(7))*time.Second)
 
 			name := fmt.Sprintf("customer-%d", atomic.AddInt64(&id, 1))
-			if err := newCustArrive(name); err!= nil {
+			if err := s.newCustArrive(name); err!= nil {
 				if err == ErrShopClosed {
 					break
 					// Customers stop arriving when the shop is closed.
@@ -65,7 +74,7 @@ func ShopIsOpened(maxChairs int) *Shop {
 	return &s
 }
 
-func (s *shop) Close() {
+func (s *Shop) Close() {
 	// Closing prevents new customers from entering
 	// the shop. After announcing that the shop is closed,
 	// this method waits for all the chairs to get empty.
@@ -98,7 +107,7 @@ func (s *Shop) serveCustomer(cust customer) {
 
 func (s *Shop) newCustArrive(name string) error {
 	if atomic.LoadInt32(&s.open) == 0 {
-		fmt.println("Customer", name, "leaves, since the shop is closed.")
+		fmt.Println("Customer", name, "leaves, since the shop is closed.")
 		return ErrShopClosed
 	}
 
