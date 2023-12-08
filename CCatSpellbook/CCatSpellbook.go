@@ -33,11 +33,11 @@ func RunPythonFile(condaEnvNamePtr *string,
 
 	switch *condaEnvNamePtr {
 	case "":
-		powerShellCommand = "python" +
-			*pyFileDirPtr + "/" + *pyFileNamePtr + strings.Join(pyArgs, " ")
+		powerShellCommand = "python3 " +
+			*pyFileDirPtr + "/" + *pyFileNamePtr + " " + strings.Join(pyArgs, " ")
 	default:
-		powerShellCommand = "conda activate " + *condaEnvNamePtr + ";python" +
-			*pyFileDirPtr + "/" + *pyFileNamePtr + strings.Join(pyArgs, " ")
+		powerShellCommand = "conda activate " + *condaEnvNamePtr + ";python3 " +
+			*pyFileDirPtr + "/" + *pyFileNamePtr + " " + strings.Join(pyArgs, " ")
 	}
 
 	cmd := exec.Command("powershell", powerShellCommand)
