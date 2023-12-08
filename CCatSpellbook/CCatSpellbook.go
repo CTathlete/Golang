@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -23,14 +24,15 @@ func CopyFile(src string, dst string) {
 }
 
 /*
-1. Put nil as conda env name if you're not using an env.
+1. Put "" as conda env name if you're not using an env.
 2. PyArgs are the arguments for your python script.
 */
-func RunPythonFile(condaEnvNamePtr *string, pyFileDirPtr *string, pyFileNamePtr *string, pyArgs ...string) {
+func RunPythonFile(condaEnvNamePtr *string,
+	pyFileDirPtr *string, pyFileNamePtr *string, pyArgs ...string) {
 	powerShellCommand := ""
 
-	switch condaEnvNamePtr {
-	case nil:
+	switch *condaEnvNamePtr {
+	case "":
 		powerShellCommand = "python" +
 			*pyFileDirPtr + "/" + *pyFileNamePtr + strings.Join(pyArgs, " ")
 	default:
@@ -43,4 +45,26 @@ func RunPythonFile(condaEnvNamePtr *string, pyFileDirPtr *string, pyFileNamePtr 
 	fmt.Println(cmd.String()) // Printing the command itself in string form, mainly for debugging purposes.
 	fmt.Println(string(out))  // Printing stdout.
 	CheckErr(err)
+}
+
+type argList []string
+
+func (a *argList) Set(value string) error {
+	*a = append(*a, value)
+	return nil
+}
+
+func (a *argList) String() string {
+	return strings.Join(*a, " ")
+}
+
+func main() {
+	condaEnvNamePtr := flag.String("cen", "", "Name of conda env, if you're using one.")
+	pyFileDirPtr := flag.String("pyd", "", "Path to the python script you'd likr to run.")
+	pyFileNamePtr := flag.String("pyn", "",
+		"Name of the python script, including suffix.")
+	pyArgs := argList{""}
+	flag.Var(&pyArgs, "pargs", "Arguments for the python script.")
+	flag.Parse()
+	RunPythonFile(condaEnvNamePtr, pyFileDirPtr, pyFileNamePtr, pyArgs...)
 }
