@@ -1,7 +1,6 @@
 package CCatspellbook
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -58,13 +57,13 @@ func (a *argList) String() string {
 	return strings.Join(*a, " ")
 }
 
-func main() {
-	condaEnvNamePtr := flag.String("cen", "", "Name of conda env, if you're using one.")
-	pyFileDirPtr := flag.String("pyd", "", "Path to the python script you'd likr to run.")
-	pyFileNamePtr := flag.String("pyn", "",
-		"Name of the python script, including suffix.")
-	pyArgs := argList{""}
-	flag.Var(&pyArgs, "pargs", "Arguments for the python script.")
-	flag.Parse()
-	RunPythonFile(condaEnvNamePtr, pyFileDirPtr, pyFileNamePtr, pyArgs...)
-}
+// func main() {
+// 	condaEnvNamePtr := flag.String("cen", "", "Name of conda env, if you're using one.")
+// 	pyFileDirPtr := flag.String("pyd", "", "Path to the python script you'd likr to run.")
+// 	pyFileNamePtr := flag.String("pyn", "",
+// 		"Name of the python script, including suffix.")
+// 	pyArgs := argList{""}
+// 	flag.Var(&pyArgs, "pargs", "Arguments for the python script.")
+// 	flag.Parse()
+// 	RunPythonFile(condaEnvNamePtr, pyFileDirPtr, pyFileNamePtr, pyArgs...)
+// }
