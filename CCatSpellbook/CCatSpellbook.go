@@ -1,4 +1,4 @@
-package book1
+package CCatspellbook
 
 import (
 	"fmt"
