@@ -15,7 +15,7 @@ func CheckErr(err error) {
 }
 
 func CopyFile(src string, dst string) {
-	// Reads src and writes it to dst.
+	// Reads src (filepath) and writes it to dst (filepath).
 	data, err := os.ReadFile(src)
 	CheckErr(err)
 	err = os.WriteFile(dst, data, 0644)
@@ -26,13 +26,13 @@ func CopyFile(src string, dst string) {
 1. Put "" as conda env name if you're not using an env.
 2. PyArgs are the arguments for your python script.
 */
-func RunPythonFile(condaEnvNamePtr *string,
+func RunPythonFile(condaEnvNamePtr *string, pySuffix string,
 	pyFileDirPtr *string, pyFileNamePtr *string, pyArgs ...string) {
 	powerShellCommand := ""
 
 	switch *condaEnvNamePtr {
 	case "":
-		powerShellCommand = "python3 " +
+		powerShellCommand = "python" + pySuffix + " " +
 			*pyFileDirPtr + "/" + *pyFileNamePtr + " " + strings.Join(pyArgs, " ")
 	default:
 		powerShellCommand = "conda activate " + *condaEnvNamePtr + ";python3 " +
@@ -89,5 +89,5 @@ func (a *argList) String() string {
 // 	pyArgs := argList{""}
 // 	flag.Var(&pyArgs, "pargs", "Arguments for the python script.")
 // 	flag.Parse()
-// 	RunPythonFile(condaEnvNamePtr, pyFileDirPtr, pyFileNamePtr, pyArgs...)
+// 	RunPythonFile(condaEnvNamePtr, "3", pyFileDirPtr, pyFileNamePtr, pyArgs...)
 // }
