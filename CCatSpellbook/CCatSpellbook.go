@@ -35,7 +35,7 @@ func RunPythonFile(condaEnvNamePtr *string, pySuffix string,
 		powerShellCommand = "python" + pySuffix + " " +
 			*pyFileDirPtr + "/" + *pyFileNamePtr + " " + strings.Join(pyArgs, " ")
 	default:
-		powerShellCommand = "conda activate " + *condaEnvNamePtr + ";python3 " +
+		powerShellCommand = "conda activate " + *condaEnvNamePtr + ";python" + pySuffix + " " +
 			*pyFileDirPtr + "/" + *pyFileNamePtr + " " + strings.Join(pyArgs, " ")
 	}
 
