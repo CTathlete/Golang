@@ -46,6 +46,30 @@ func RunPythonFile(condaEnvNamePtr *string,
 	CheckErr(err)
 }
 
+func FileToString(filePath string) string {
+	data, err := os.ReadFile(filePath)
+	CheckErr(err)
+	return string(data)
+}
+
+func StringToFile(data string, targetPath string) int {
+	// Opens file for reading AND writing.
+	file, err := os.OpenFile(targetPath, os.O_RDWR, 0777)
+	CheckErr(err)
+	defer file.Close()
+
+	bytesWritten, err := file.WriteString(data)
+	CheckErr(err)
+	return bytesWritten
+}
+
+func ReplaceInFile(oldString string, newString string,
+	filePath string, numOfOccurences int) {
+	data := FileToString(filePath)
+	data = strings.Replace(data, oldString, newString, numOfOccurences)
+	StringToFile(data, filePath)
+}
+
 type argList []string
 
 func (a *argList) Set(value string) error {
