@@ -54,7 +54,7 @@ func FileToString(filePath string) string {
 
 func StringToFile(data string, targetPath string) int {
 	// Opens file for reading AND writing.
-	file, err := os.OpenFile(targetPath, os.O_RDWR, 0777)
+	file, err := os.OpenFile(targetPath, os.O_RDWR|os.O_TRUNC, 0777)
 	CheckErr(err)
 	defer file.Close()
 
